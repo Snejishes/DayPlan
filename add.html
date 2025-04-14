@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neue Aufgabe hinzufügen</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Top-Bar -->
+  <header class="top-bar">
+    <h1 class="header-title">Neue Aufgabe</h1>
+  </header>
+
+  <!-- Detailformular -->
+  <main class="detail-form">
+    <form id="taskForm">
+      <!-- Aufgabentitel -->
+      <label for="task-title">Titel:</label>
+      <input type="text" id="task-title" name="title" placeholder="z. B. Vorlesung: Mathe" required>
+
+      <!-- Aufgabentyp -->
+      <label for="task-type">Typ:</label>
+      <select id="task-type" name="type" required>
+        <option value="">Typ wählen</option>
+        <option value="vorlesung">Vorlesung</option>
+        <option value="termin">Termin</option>
+        <option value="lernen">Lernen</option>
+        <option value="sonstiges">Sonstiges</option>
+      </select>
+
+      <!-- Uhrzeit -->
+      <label for="task-time">Uhrzeit:</label>
+      <input type="time" id="task-time" name="time" required>
+
+      <!-- Fester Termin (optional) -->
+      <label for="task-date">Datum (optional, für feste Termine):</label>
+      <input type="date" id="task-date" name="fixedDate">
+
+      <!-- Wiederholungstage -->
+      <fieldset>
+        <legend>Wiederholungstage:</legend>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="repeatingDays" value="Montag"> Montag</label>
+          <label><input type="checkbox" name="repeatingDays" value="Dienstag"> Dienstag</label>
+          <label><input type="checkbox" name="repeatingDays" value="Mittwoch"> Mittwoch</label>
+          <label><input type="checkbox" name="repeatingDays" value="Donnerstag"> Donnerstag</label>
+          <label><input type="checkbox" name="repeatingDays" value="Freitag"> Freitag</label>
+          <label><input type="checkbox" name="repeatingDays" value="Samstag"> Samstag</label>
+          <label><input type="checkbox" name="repeatingDays" value="Sonntag"> Sonntag</label>
+        </div>
+      </fieldset>
+
+      <!-- Optionale Notizen -->
+      <label for="task-note">Notizen (optional):</label>
+      <textarea id="task-note" name="note" placeholder="Weitere Informationen..."></textarea>
+
+      <!-- Formularbuttons -->
+      <div class="form-buttons">
+        <button type="submit" class="button">Aufgabe speichern</button>
+        <a href="index.html" class="button secondary">Abbrechen</a>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Formularverarbeitung
+    document.getElementById('taskForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Werte aus dem Formular auslesen
+      const title = document.getElementById('task-title').value;
+      const type = document.getElementById('task-type').value;
+      const time = document.getElementById('task-time').value;
+      const note = document.getElementById('task-note').value;
+
+      // Fester Termin (Datum, optional)
+      const fixedDate = document.getElementById('task-date').value;  // ISO-Format (YYYY-MM-DD) oder leer
+
+      // Wiederholungstage auslesen
+      const checkedDays = Array.from(document.querySelectorAll('input[name="repeatingDays"]:checked'))
+        .map(cb => cb.value);
+
+      // Erstelle ein Task-Objekt
+      const task = {
+        id: Date.now(),   // eindeutige ID
+        title,
+        type,
+        time,
+        note,
+        fixedDate: fixedDate ? fixedDate : null,
+        repeatingDays: checkedDays
+      };
+
+      // Bestehende Tasks aus LocalStorage laden oder neues Array erstellen
+      let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.push(task);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+
+      // Zurück zum Dashboard
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+
+</html>
