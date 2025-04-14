@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aufgabendetails</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Top-Bar -->
+  <header class="top-bar">
+    <h1 class="header-title">Aufgabendetails</h1>
+  </header>
+
+  <!-- Detailansicht -->
+  <main class="detail-view">
+    <div id="taskDetails"></div>
+    <div class="detail-buttons">
+      <button id="deleteTask" class="button secondary">Aufgabe löschen</button>
+      <a href="index.html" class="button">Zurück</a>
+    </div>
+  </main>
+
+  <script>
+    // Hilfsfunktion: Hole Query-Parameter aus URL
+    function getQueryParam(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    // Task anhand der ID aus LocalStorage laden und anzeigen
+    function loadTask() {
+      const taskId = getQueryParam('id');
+      if (!taskId) {
+        document.getElementById('taskDetails').textContent = "Kein Task gefunden.";
+        return;
+      }
+
+      let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      const task = tasks.find(t => t.id == taskId);
+      if (!task) {
+        document.getElementById('taskDetails').textContent = "Task nicht gefunden oder wurde gelöscht.";
+        return;
+      }
+
+      // Erstelle Anzeige-HTML
+      let html = `<h2>${task.title}</h2>`;
+      html += `<p><strong>Typ:</strong> ${task.type}</p>`;
+      html += `<p><strong>Uhrzeit:</strong> ${task.time}</p>`;
+      if (task.fixedDate) {
+        html += `<p><strong>Datum:</strong> ${task.fixedDate}</p>`;
+      }
+      if (task.repeatingDays && task.repeatingDays.length > 0) {
+        html += `<p><strong>Wiederholungstage:</strong> ${task.repeatingDays.join(", ")}</p>`;
+      }
+      if (task.note) {
+        html += `<p><strong>Notizen:</strong> ${task.note}</p>`;
+      }
+      document.getElementById('taskDetails').innerHTML = html;
+
+      // Löschen-Button konfigurieren
+      document.getElementById('deleteTask').addEventListener('click', function () {
+        // Bestätigung
+        if (confirm("Möchtest du diese Aufgabe wirklich löschen?")) {
+          // Task aus LocalStorage entfernen
+          tasks = tasks.filter(t => t.id != taskId);
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+          window.location.href = 'index.html';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTask);
+  </script>
+</body>
+
+</html>
