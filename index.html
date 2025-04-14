@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Planner – Wochenübersicht</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Top-Bar mit Navigation -->
+  <header class="top-bar">
+    <div class="week-nav">
+      <button id="prevWeek" class="nav-arrow">&larr;</button>
+      <h1 id="weekLabel" class="header-title">Woche</h1>
+      <button id="nextWeek" class="nav-arrow">&rarr;</button>
+    </div>
+    <nav class="nav-buttons">
+      <a href="add.html" class="button">Neue Aufgabe</a>
+    </nav>
+  </header>
+
+  <!-- Container für die dynamische Wochenansicht (eine Woche) -->
+  <div id="weekContainer"></div>
+
+  <!-- Rechte Spalte für zusätzliche Informationen (optional) -->
+  <aside class="right-column">
+    <h2 class="right-column-title">Notizen / Termine</h2>
+    <p>Weitere Informationen.</p>
+  </aside>
+
+  <script src="planner.js"></script>
+</body>
+
+</html>
